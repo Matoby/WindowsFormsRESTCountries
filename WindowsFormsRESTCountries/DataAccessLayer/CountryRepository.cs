@@ -58,5 +58,10 @@ namespace DataAccessLayer
         {
             return _countries;
         }
+
+        public void EditCountry()
+        {
+
+        }
     }
 }

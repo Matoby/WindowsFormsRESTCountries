@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,14 @@ namespace PresentationLayer
 
         private void FormCountries_Load(object sender, EventArgs e)
         {
-            dataGridViewTable.DataSource = _tableBindingSource;
+            dataGridViewTable.DataSource = _tableBindingSource;    
+        }
+
+        private void dataGridViewTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            string sUrl = dataGridViewTable.Rows[e.RowIndex].Cells[10].Value.ToString();
+            ProcessStartInfo sInfo = new ProcessStartInfo(sUrl);
+            Process.Start(sInfo);
         }
     }
 }
