@@ -25,11 +25,18 @@ namespace PresentationLayer
         private void button1_Click(object sender, EventArgs e)
         {
             _tableBindingSource.DataSource = _countryRepository.ImportCountries();
+
+            /*Icon flagIcon = new Icon(this.GetType(), "flag.png");
+            DataGridViewImageColumn iconColumn = new DataGridViewImageColumn();
+            iconColumn.Image = flagIcon.ToBitmap();
+            iconColumn.Name = "Flag";
+            iconColumn.HeaderText = "Flag";
+            dataGridViewTable.Columns.Insert(10, iconColumn);*/
         }
 
         private void FormCountries_Load(object sender, EventArgs e)
         {
-            dataGridViewTable.DataSource = _tableBindingSource;    
+            dataGridViewTable.DataSource = _tableBindingSource;
         }
 
         private void dataGridViewTable_CellContentClick(object sender, DataGridViewCellEventArgs e)
