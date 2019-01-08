@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using System.Net;
 using System.IO;
+using System.Data.Common;
+using System.Data.SqlClient;
 
 namespace DataAccessLayer
 {
@@ -13,7 +15,8 @@ namespace DataAccessLayer
     {
         private List<Country> _countries = new List<Country>();
         string url = "https://restcountries.eu/rest/v2/all";
-        
+        string connectionString = "Data Source=193.198.57.183; Initial Catalog = DotNet;User ID = vjezbe; Password = vjezbe";
+
         public static string CallRestMethod(string url)
         {
             HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(url);
@@ -29,7 +32,51 @@ namespace DataAccessLayer
             return result;
         }
 
-        public CountryRepository()
+        public void SaveAllMethod(Country country)
+        {
+            using (DbConnection connection = new SqlConnection(connectionString))
+            using (DbCommand command = connection.CreateCommand())
+            {
+                command.CommandText = "INSERT INTO Countries_Countries (Name, Aplha3Code, Capital, Region, Subregion, Population, LatLng, Area, Demonym, Flag) VALUES ('" + country.name + "' , '" + country.alpha3Code + "' , '" + country.capital + "' , '" + country.region + "', '" + country.subregion + "', '" + country.population + "', '" + country.latlng + "' , '" + country.area + "' , '" + country.demonym + "' , '" + country.flag + "')";
+                connection.Open();
+                using (DbDataReader reader = command.ExecuteReader())
+                {
+                    reader.Read();
+                }
+            }
+        }
+
+        public Country GetCountriesFromDb()
+        {
+            List<Country> countries = new List<Country();
+            using (DbConnection connection = new SqlConnection(connectionString))
+            using (DbCommand command = connection.CreateCommand())
+            {
+                command.CommandText = "SELECT * FROM [Countries_Countries]";
+                connection.Open();
+                using (DbDataReader reader = command.ExecuteReader())
+                {
+                    while(reader.Read())
+                    {
+                        countries.Add(new Country
+                        {
+                            name = (string)reader["Name"],
+                            alpha3Code = (string)reader["Alpha3Code"],
+                            capital = (string)reader["Capital"],
+                            region = (string)reader["Region"],
+                            subregion = (string)reader["Subregion"],
+                            population = (int)reader["Population"],
+                            latlng = (string)reader["LatLng"],
+                            area = (float)reader["Area"],
+                            demonym = (string)reader["Demonym"],
+                            flag = (string)reader["Flag"]
+                        });
+                    }
+                }
+            }
+            return countries;
+        }
+        /*public CountryRepository()
         {
             string json = CallRestMethod(url);
 
@@ -52,16 +99,13 @@ namespace DataAccessLayer
                     flag = (string)item["flag"]
                 });
             }
-        }
+        }*/
 
         public List<Country> ImportCountries()
         {
             return _countries;
         }
 
-        public void EditCountry()
-        {
 
-        }
     }
 }
