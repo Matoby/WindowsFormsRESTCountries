@@ -34,7 +34,27 @@ namespace DataAccessLayer
 
         public CountryRepository()
         {
-            _countries = GetCountriesFromDb();
+            string json = CallRestMethod(url);
+
+            JArray jsonObject = JArray.Parse(json);
+
+            foreach (JObject item in jsonObject)
+            {
+                _countries.Add(new Country
+                {
+                    name = (string)item["name"],
+                    alpha3Code = (string)item["alpha3Code"],
+                    capital = (string)item["capital"],
+                    region = (string)item["region"],
+                    subregion = (string)item["subregion"],
+                    population = (int)item["population"],
+                    latlng = (string)item["latlng"],
+                    area = item["area"].Type == JTokenType.Null ? 0 : (float)item["area"],
+                    demonym = (string)item["demonym"],
+                    timeZone = (string)item["timeZone"],
+                    flag = (string)item["flag"]
+                });
+            }
         }
 
         public void SaveAllMethod(Country country)
