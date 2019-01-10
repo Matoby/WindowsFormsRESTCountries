@@ -14,7 +14,8 @@ namespace DataAccessLayer
         public string region { get; set; }
         public string subregion { get; set; }
         public int population { get; set; }
-        public string latlng { get; set; }
+        public float lat { get; set; }
+        public float lng { get; set; }
         public float area { get; set; }
         public string demonym { get; set; }
         public string timeZone { get; set; }

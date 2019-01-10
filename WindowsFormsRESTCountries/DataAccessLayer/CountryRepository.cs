@@ -17,6 +17,34 @@ namespace DataAccessLayer
         string url = "https://restcountries.eu/rest/v2/all";
         string connectionString = "Data Source=193.198.57.183; Initial Catalog = DotNet;User ID = vjezbe; Password = vjezbe";
 
+        public CountryRepository()
+        {
+            string json = CallRestMethod(url);
+            JArray jsonObject = JArray.Parse(json);
+
+            foreach (JObject item in jsonObject)
+            {
+                _countries.Add(new Country
+                {
+                    name = (string)item["name"],
+                    alpha3Code = (string)item["alpha3Code"],
+                    capital = (string)item["capital"],
+                    region = (string)item["region"],
+                    subregion = (string)item["subregion"],
+                    population = (int)item["population"],
+                    lat = (float)item["latlng"][0],
+                    lng = (float)item["latlng"][1],
+                    area = item["area"].Type == JTokenType.Null ? 0 : (float)item["area"],
+                    demonym = (string)item["demonym"],
+                    timeZone = (string)item["timeZone"][0],
+                    flag = (string)item["flag"]
+                });
+            }
+            Console.WriteLine(_countries.Count);
+        }
+
+        
+
         public static string CallRestMethod(string url)
         {
             HttpWebRequest webrequest = (HttpWebRequest)WebRequest.Create(url);
@@ -32,37 +60,16 @@ namespace DataAccessLayer
             return result;
         }
 
-        public CountryRepository()
-        {
-            string json = CallRestMethod(url);
-
-            JArray jsonObject = JArray.Parse(json);
-
-            foreach (JObject item in jsonObject)
-            {
-                _countries.Add(new Country
-                {
-                    name = (string)item["name"],
-                    alpha3Code = (string)item["alpha3Code"],
-                    capital = (string)item["capital"],
-                    region = (string)item["region"],
-                    subregion = (string)item["subregion"],
-                    population = (int)item["population"],
-                    latlng = (string)item["latlng"],
-                    area = item["area"].Type == JTokenType.Null ? 0 : (float)item["area"],
-                    demonym = (string)item["demonym"],
-                    timeZone = (string)item["timeZone"],
-                    flag = (string)item["flag"]
-                });
-            }
-        }
+        //Lista country
 
         public void SaveAllMethod(Country country)
         {
             using (DbConnection connection = new SqlConnection(connectionString))
             using (DbCommand command = connection.CreateCommand())
             {
-                command.CommandText = "INSERT INTO Countries_Countries (Name, Aplha3Code, Capital, Region, Subregion, Population, LatLng, Area, Demonym, TimeZone, Flag) VALUES ('" + country.name + "' , '" + country.alpha3Code + "' , '" + country.capital + "' , '" + country.region + "', '" + country.subregion + "', '" + country.population + "', '" + country.latlng + "' , '" + country.area + "' , '" + country.demonym + "' , '" + country.timeZone + "', '" + country.flag + "')";
+                var query = "INSERT INTO Countries_Countries (Name, Aplha3Code, Capital, Region, Subregion, Population, Lat, Lng, Area, Demonym, TimeZone, Flag) VALUES ('" + country.name + "' , '" + country.alpha3Code + "' , '" + country.capital + "' , '" + country.region + "', '" + country.subregion + "', '" + country.population + "', '" + country.lat + "' , '" + country.lng + "', '" + country.area + "' , '" + country.demonym + "' , '" + country.timeZone + "', '" + country.flag + "')";
+                Console.WriteLine(query);
+                command.CommandText = query;
                 connection.Open();
                 using (DbDataReader reader = command.ExecuteReader())
                 {
@@ -91,7 +98,8 @@ namespace DataAccessLayer
                             region = (string)reader["Region"],
                             subregion = (string)reader["Subregion"],
                             population = (int)reader["Population"],
-                            latlng = (string)reader["LatLng"],
+                            lat = (float)reader["lat"],
+                            lng = (float)reader["lng"],
                             area = (float)reader["Area"],
                             demonym = (string)reader["Demonym"],
                             timeZone = (string)reader["TimeZone"],
@@ -103,7 +111,7 @@ namespace DataAccessLayer
             return countries;
         }
 
-        public Country GetCountry()
+        public void GetCountry()
         {
             
         }
@@ -113,7 +121,7 @@ namespace DataAccessLayer
             using (DbConnection connection = new SqlConnection(connectionString))
             using (DbCommand command = connection.CreateCommand())
             {
-                command.CommandText = "UPDATE Countries_Countries SET Name = '" + country.name + "', Alpha3Code = '" + country.alpha3Code + "', Capital = '" + country.capital + "' Region = " + country.region + "' Subregion = " + country.subregion + "' Population = " + country.population + "'LatLng = " + country.latlng + "' Area = " + country.area + "'Demonym = " + country.demonym + "' TimeZone = " + country.timeZone + "' Flag = " + country.flag + "'";
+                command.CommandText = "UPDATE Countries_Countries SET Name = '" + country.name + "', Alpha3Code = '" + country.alpha3Code + "', Capital = '" + country.capital + "' Region = " + country.region + "' Subregion = " + country.subregion + "' Population = " + country.population + "'Lat = " + country.lat + "' Lng = " +country.lng +  "' Area = " + country.area + "'Demonym = " + country.demonym + "' TimeZone = " + country.timeZone + "' Flag = " + country.flag + "'";
                 connection.Open();
                 using (DbDataReader oReader = command.ExecuteReader())
                 {

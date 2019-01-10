@@ -13,6 +13,9 @@ namespace ConsoleAppTester
         {
             var repo = new CountryRepository();
             var countries = repo.GetCountriesFromDb();
+            //var countryClass = new Country();
+            // repo.SaveAllMethod(countryClass);
+            /*var countries = repo.GetCountriesFromDb();
             foreach(var country in countries)
             {
                 Console.WriteLine(country.name);
@@ -27,7 +30,7 @@ namespace ConsoleAppTester
                 Console.WriteLine(country.timeZone);
                 Console.WriteLine(country.flag);
                 Console.WriteLine("\n");
-            }
+            }*/
             Console.ReadKey();
         }
     }
