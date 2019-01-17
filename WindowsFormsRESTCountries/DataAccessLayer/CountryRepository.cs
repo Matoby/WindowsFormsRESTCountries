@@ -13,7 +13,7 @@ namespace DataAccessLayer
 {
     public class CountryRepository
     {
-        public List<Country> _countries = new List<Country>();
+        private List<Country> _countries = new List<Country>();
         string url = "https://restcountries.eu/rest/v2/all";
         string connectionString = "Data Source=193.198.57.183; Initial Catalog = DotNet;User ID = vjezbe; Password = vjezbe";
 
@@ -32,15 +32,15 @@ namespace DataAccessLayer
                     region = (string)item["region"],
                     subregion = (string)item["subregion"],
                     population = (int)item["population"],
-                    lat = (float)item["latlng"][0],
-                    lng = (float)item["latlng"][1],
+                    //lat = (float)item["latlng"][0],
+                    //lng = (float)item["latlng"][1],
                     area = item["area"].Type == JTokenType.Null ? 0 : (float)item["area"],
                     demonym = (string)item["demonym"],
-                    timeZone = (string)item["timeZone"][0],
-                    flag = (string)item["flag"]
+                    //timeZone = (string)item["timeZones"][0],
+                    //flag = (string)item["flag"]
                 });
             }
-            //Console.WriteLine(_countries.Count);
+            Console.WriteLine(_countries.Count);
         }
 
         public static string CallRestMethod(string url)
@@ -94,11 +94,11 @@ namespace DataAccessLayer
                             region = (string)reader["Region"],
                             subregion = (string)reader["Subregion"],
                             population = (int)reader["Population"],
-                            lat = (float)reader["lat"],
-                            lng = (float)reader["lng"],
+                            lat = (float)reader["Lat"],
+                            lng = (float)reader["Lng"],
                             area = (float)reader["Area"],
                             demonym = (string)reader["Demonym"],
-                            timeZone = (string)reader["TimeZone"],
+                            timeZone = (string)reader["Time Zone"],
                             flag = (string)reader["Flag"]
                         });
                     }
