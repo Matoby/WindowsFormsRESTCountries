@@ -12,10 +12,9 @@ namespace ConsoleAppTester
         static void Main(string[] args)
         {
             var repo = new CountryRepository();
-            var countries = repo.GetCountriesFromDb();
+            var countries = repo._countries;
             //var countryClass = new Country();
             // repo.SaveAllMethod(countryClass);
-            /*var countries = repo.GetCountriesFromDb();
             foreach(var country in countries)
             {
                 Console.WriteLine(country.name);
@@ -24,13 +23,14 @@ namespace ConsoleAppTester
                 Console.WriteLine(country.region);
                 Console.WriteLine(country.subregion);
                 Console.WriteLine(country.population);
-                Console.WriteLine(country.latlng);
+                //Console.WriteLine(country.lat);
+                //Conosole.WriteLine(country.lng);
                 Console.WriteLine(country.area);
                 Console.WriteLine(country.demonym);
-                Console.WriteLine(country.timeZone);
+                //Console.WriteLine(country.timeZone);
                 Console.WriteLine(country.flag);
                 Console.WriteLine("\n");
-            }*/
+            }
             Console.ReadKey();
         }
     }

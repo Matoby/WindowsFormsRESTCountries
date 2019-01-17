@@ -8,16 +8,17 @@ using System.Net;
 using System.IO;
 using System.Data.Common;
 using System.Data.SqlClient;
+using Newtonsoft.Json;
 
 namespace DataAccessLayer
 {
     public class CountryRepository
     {
-        private List<Country> _countries = new List<Country>();
+        public List<Country> _countries = new List<Country>();
         string url = "https://restcountries.eu/rest/v2/all";
         string connectionString = "Data Source=193.198.57.183; Initial Catalog = DotNet;User ID = vjezbe; Password = vjezbe";
 
-        public CountryRepository()
+        /*public CountryRepository()
         {
             string json = CallRestMethod(url);
             JArray jsonObject = JArray.Parse(json);
@@ -32,15 +33,46 @@ namespace DataAccessLayer
                     region = (string)item["region"],
                     subregion = (string)item["subregion"],
                     population = (int)item["population"],
-                    //lat = (float)item["latlng"][0],
-                    //lng = (float)item["latlng"][1],
+                    lat = item["latlng"].Type == JTokenType.Null ? 0 : (float)item["latlng"][0],
+                    //lng = item["latlng"].Type == JTokenType.None ? 0 : (float)item["latlng"][1],
                     area = item["area"].Type == JTokenType.Null ? 0 : (float)item["area"],
                     demonym = (string)item["demonym"],
-                    //timeZone = (string)item["timeZones"][0],
-                    //flag = (string)item["flag"]
+                    //timeZone = (string)item["timezones"][0],
+                    flag = (string)item["flag"]
                 });
             }
-            Console.WriteLine(_countries.Count);
+            //Console.WriteLine(_countries.Count);
+        }*/
+
+        public List<Country> GetCountries()
+        {
+            string json = CallRestMethod(url);
+            JArray jsonObject = JArray.Parse(json);
+
+            foreach(JObject item in json)
+            {
+                string name = (string)item.GetValue("name");
+                string alpha3Code = (string)item.GetValue("aplha3Code");
+                string capital = (string)item.GetValue("capital");
+                string region = (string)item.GetValue("region");
+                string subregion = (string)item.GetValue("subregion");
+                var latlng = item["latlng"].ToList();
+                float lat = 0;
+                float lng = 0;
+                for(int i = 0; i < latlng.Count; i++)
+                {
+                    if(i == 0)
+                    {
+                        lat = (float)latlng[i];
+                    }
+                    if(i == 1)
+                    {
+                        lng = (float)latlng[i];
+                    }
+                }
+            }
+
+            return _countries;
         }
 
         public static string CallRestMethod(string url)
