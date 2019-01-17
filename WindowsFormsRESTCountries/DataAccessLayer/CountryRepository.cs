@@ -40,10 +40,8 @@ namespace DataAccessLayer
                     flag = (string)item["flag"]
                 });
             }
-            Console.WriteLine(_countries.Count);
+            //Console.WriteLine(_countries.Count);
         }
-
-        
 
         public static string CallRestMethod(string url)
         {
@@ -59,8 +57,6 @@ namespace DataAccessLayer
             webresponse.Close();
             return result;
         }
-
-        //Lista country
 
         public void SaveAllMethod(Country country)
         {
@@ -109,11 +105,6 @@ namespace DataAccessLayer
                 }
             }
             return countries;
-        }
-
-        public void GetCountry()
-        {
-            
         }
 
         public void EditCountry(Country country)
